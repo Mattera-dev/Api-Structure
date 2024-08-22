@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoria RAM's</title>
+    <style>
+        /* Resetting default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Full-screen container with a minimalist gradient background */
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(45deg, #2c3e50, #fd746c);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            width: 100%;
+            padding: 1%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            position: absolute;
+            top: 0;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .navbar a:hover {
+            color: #fd746c;
+        }
+
+        /* RAM data boxes */
+        .ram {
+            width: 25%;
+            height: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: #202020;
+            border: 2px solid white;
+            padding: 3%;
+            margin: 2% 1%;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        /* RAM usage text styling */
+        .ram-minmax {
+            color: blueviolet;
+            font-size: 24px;
+            z-index: 5;
+        }
+
+        /* Hover effect for RAM boxes */
+        .ram:hover {
+            border-color: blueviolet;
+            transform: scale(1.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .ram-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Circle inner dynamic styling */
+        .ram-circle-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#ram1">RAM Total</a>
+        <a href="#ram2">RAM Usada</a>
+    </div>
+
+    <div class="container">
+        <!-- Displaying total RAM and used RAM -->
+        <div class="ram" id="ram1">
+            <h2>RAM Usada / Total</h2>
+            <p class="ram-minmax" id="ramUsed">Loading...  </p>
+        </div>
+
+        <!-- Displaying RAM usage percentage with a circle -->
+        <div class="ram" id="ram2">
+            <h2>Uso da RAM</h2>
+            <p class="ram-minmax" id="perc">Loading...</p>
+            <div class="ram-circle"
+                style="background: conic-gradient(blueviolet 0% 0%, transparent 0% 100%)">
+                <div class="ram-circle-inner" id="ramCircle"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const x = async () => {
+            await fetch('http://127.0.0.1:3000/monitor?infos=a', {
+                method: 'GET', // ou 'POST', 'PUT', 'DELETE', etc.
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na requisição: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.querySelector("#perc").textContent = data.ramPercent.toString().slice(0, 5) + "% / 100%"
+                    document.querySelector("#ramUsed").textContent = (data.ram > 1024 ? (data.ram / 1024).toFixed(2) : data.ram.toFixed(2)) + (data.ram > 1024 ? " GB" : " MB") + " / " + data.ramTotal;
+                    document.querySelector(".ram-circle").style.setProperty("background", "conic-gradient(blueviolet 0%" + data.ramPercent + "%, transparent " + data.ramPercent + "% 100%)")
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+        const a = setInterval(async () => {
+            x();
+        }, 1000)
+    </script>
+</body>
+
+</html>

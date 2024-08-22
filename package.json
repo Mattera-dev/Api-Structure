@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@fastify/helmet": "^11.1.1",
+    "@types/node": "^22.3.0",
+    "fastify": "^4.28.1",
+    "fs": "^0.0.1-security",
+    "os-utils": "^0.0.14",
+    "path": "^0.12.7",
+    "ts": "^0.2.2",
+    "ts-node-dev": "^2.0.0",
+    "yoctocolors-cjs": "^2.1.2"
+  },
+  "name": "aa",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev src/main.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a"
+}
